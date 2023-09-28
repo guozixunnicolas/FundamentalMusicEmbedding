@@ -1,0 +1,56 @@
+experiment: "RIPO"
+batch_size: 16
+optimizer: "adam"
+lr: 0.001
+device: &dvce "cuda:3" #"cuda:3"
+d_model: &dmdl 256
+epochs: 80
+dataset:
+    data_dir: "/data/nicolas/MotifNet_RIPO_transformer_FME/data_processing_new/wikifornia_theorytab_csv_mid"
+    seq_len_chord: 88
+    seq_len_note: 246
+relative_pitch_attention:
+    d_model: *dmdl
+    nhead: 8
+    dim_feedforward: 2048
+    dropout: 0.2
+    nlayers: 2
+    pitch_dim: 128
+    dur_dim: 17
+    emb_size: 128
+    # max_len: 245
+    device: *dvce
+    position_encoding_conf:
+        if_index: True
+        if_global_timing: True
+        if_modulo_timing: True
+        device: *dvce
+    attention_conf:
+        attention_type: "rgl_rel_pitch_dur" #mha, rgl_rel_pitch_dur, rgl_vanilla, linear
+        if_add_relative_pitch: True
+        if_add_relative_duration: True
+        if_add_relative_idx: True
+        if_add_relative_idx_no_mask: False
+    pitch_embedding_conf:
+        d_model: *dmdl 
+        type: "se" #nn, se, one_hot, nn_pretrain
+        base: 9919
+        if_trainable: True
+        translation_bias_type: "nd" #2d or nd trainable vector/ None
+        device: *dvce
+        emb_nn: True
+        # pretrain_emb_path: None
+        # freeze_pretrain: True
+    dur_embedding_conf: 
+        d_model: *dmdl 
+        type: "se" #nn, se
+        base: 7920
+        if_trainable: True
+        translation_bias_type: "nd" #2d or nd trainable vector/ None
+        device: *dvce
+        emb_nn: True
+        # pretrain_emb_path: None
+        # freeze_pretrain: True
+
+
+
