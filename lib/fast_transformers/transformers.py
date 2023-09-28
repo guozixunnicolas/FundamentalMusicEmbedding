@@ -14,7 +14,7 @@ import torch
 from torch.nn import Dropout, LayerNorm, Linear, Module, ModuleList
 import torch.nn.functional as F
 
-from .events import EventDispatcher, IntermediateOutput
+from .events import EventDispatcher
 from .masking import FullMask, LengthMask
 
 
@@ -49,7 +49,7 @@ class TransformerEncoderLayer(Module):
         self.norm1 = LayerNorm(d_model)
         self.norm2 = LayerNorm(d_model)
         self.dropout = Dropout(dropout)
-        self.activation = getattr(F, activation)
+        self.activation = F.relu if activation == "relu" else F.gelu
         self.event_dispatcher = EventDispatcher.get(event_dispatcher)
 
     def forward(self, x, attn_mask=None, length_mask=None):
@@ -136,7 +136,6 @@ class TransformerEncoder(Module):
         # Apply all the transformers
         for layer in self.layers:
             x = layer(x, attn_mask=attn_mask, length_mask=length_mask)
-            self.event_dispatcher.dispatch(IntermediateOutput(self, x))
 
         # Apply the normalization if needed
         if self.norm is not None:
@@ -181,7 +180,7 @@ class TransformerDecoderLayer(Module):
         self.norm2 = LayerNorm(d_model)
         self.norm3 = LayerNorm(d_model)
         self.dropout = Dropout(dropout)
-        self.activation = getattr(F, activation)
+        self.activation = F.relu if activation == "relu" else F.gelu
         self.event_dispatcher = EventDispatcher.get(event_dispatcher)
 
     def forward(self, x, memory, x_mask=None, x_length_mask=None,
@@ -287,7 +286,6 @@ class TransformerDecoder(Module):
             x = layer(x, memory, x_mask=x_mask, x_length_mask=x_length_mask,
                       memory_mask=memory_mask,
                       memory_length_mask=memory_length_mask)
-            self.event_dispatcher.dispatch(IntermediateOutput(self, x))
 
         # Apply the normalization if needed
         if self.norm is not None:
