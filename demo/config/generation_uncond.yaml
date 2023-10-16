@@ -1,0 +1,9 @@
+ckpt_path: "/data/nicolas/Fundamental_Music_Embedding_RIPO_Attention/checkpoints/12_29_2022_20_56_15_baseline" 
+device: "cuda:2"
+seed_bar_num: 2
+target_bar_num: 16
+sampling: 
+    decoder_choice: "top_k"
+    temperature: 1.0
+    top_k: 5
+    top_p: 0.9
