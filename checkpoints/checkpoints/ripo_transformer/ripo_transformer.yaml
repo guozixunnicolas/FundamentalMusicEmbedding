@@ -1,10 +1,10 @@
 batch_size: 16
 d_model: 256
 dataset:
-  data_dir: /data/nicolas/MotifNet_RIPO_transformer_FME/data_processing_new/wikifornia_theorytab_csv_mid
+  data_dir: demo/data/wikifornia_theorytab_csv_mid
   seq_len_chord: 88
   seq_len_note: 246
-device: cuda:3
+device: cuda
 epochs: 80
 experiment: bidirectional_RIPO
 lr: 0.001
@@ -17,14 +17,14 @@ relative_pitch_attention:
     if_add_relative_idx_no_mask: false
     if_add_relative_pitch: true
   d_model: 256
-  device: cuda:3
+  device: cuda
   dim_feedforward: 2048
   dropout: 0.2
   dur_dim: 17
   dur_embedding_conf:
     base: 7920
     d_model: 256
-    device: cuda:3
+    device: cuda
     emb_nn: true
     if_trainable: true
     translation_bias_type: nd
@@ -36,13 +36,13 @@ relative_pitch_attention:
   pitch_embedding_conf:
     base: 9919
     d_model: 256
-    device: cuda:3
+    device: cuda
     emb_nn: true
     if_trainable: true
     translation_bias_type: nd
     type: se
   position_encoding_conf:
-    device: cuda:3
+    device: cuda
     if_global_timing: true
     if_index: true
     if_modulo_timing: true
